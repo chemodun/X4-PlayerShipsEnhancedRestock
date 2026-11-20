@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Italian -->
+<diff>
+  <add sel="/language">
+    <page id="1972092435" title="Player Ships Enhanced Restock" descr="" voice="no">
+      <t id="1">Rifornimento migliorato delle navi del giocatore</t>
+
+      <!-- Section: General (90100) -->
+      <t id="90100">Generale</t>
+      <t id="90101">Attiva la ricerca migliorata di riparazione/rifornimento</t>
+
+      <!-- Section: Search Scope (90110) -->
+      <t id="90110">Ambito di ricerca</t>
+      <t id="90111">Raggio di ricerca</t>
+      <t id="90112">Solo il settore</t>
+      <t id="90113">Entro pochi portali</t>
+      <t id="90114">Tutta la galassia conosciuta</t>
+      <t id="90115">Max portali</t>
+
+      <!-- Section: Station Preference (90120) -->
+      <t id="90120">Preferenza stazioni</t>
+      <t id="90121">Proprietario delle stazioni</t>
+      <t id="90122">Solo le tue stazioni</t>
+      <t id="90123">Le tue stazioni + fazioni amichevoli</t>
+      <t id="90124">Qualsiasi fazione non ostile</t>
+      <t id="90125">Prova prima le tue navi da rifornimento e stazioni nel settore</t>
+
+      <!-- Section: Applies To (90130) -->
+      <t id="90130">Si applica a</t>
+      <t id="90131">Riparazione</t>
+      <t id="90132">Rifornimento di munizioni &amp; unità</t>
+
+      <!-- Section: Cost Limits (90140) -->
+      <t id="90140">Limiti di costo</t>
+      <t id="90141">Costo massimo di riparazione, 0 = illimitato</t>
+      <t id="90142">Costo massimo di rifornimento, 0 = illimitato</t>
+
+      <!-- Section: Debug (90900) -->
+      <t id="90900">Debug</t>
+      <t id="90910">Livello di debug</t>
+      <t id="90911">Nessuno</t>
+      <t id="90912">Debug</t>
+      <t id="90913">Traccia</t>
+    </page>
+  </add>
+</diff>

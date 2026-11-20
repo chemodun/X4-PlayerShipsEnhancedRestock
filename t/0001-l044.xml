@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<diff>
+  <add sel="/language">
+    <page id="1972092435" title="Player Ships Enhanced Restock" descr="" voice="no">
+      <t id="1">Player Ships Enhanced Restock</t>
+
+      <!-- Section: General (90100) -->
+      <t id="90100">General</t>
+      <t id="90101">Enable enhanced repair/resupply search</t>
+
+      <!-- Section: Search Scope (90110) -->
+      <t id="90110">Search Scope</t>
+      <t id="90111">Search radius</t>
+      <t id="90112">Sector only</t>
+      <t id="90113">Nearby jumps</t>
+      <t id="90114">Whole known galaxy</t>
+      <t id="90115">Max jumps</t>
+
+      <!-- Section: Station Preference (90120) -->
+      <t id="90120">Station Preference</t>
+      <t id="90121">Station ownership</t>
+      <t id="90122">Own stations only</t>
+      <t id="90123">Own + friendly factions</t>
+      <t id="90124">Any non-hostile</t>
+      <t id="90125">Try own supply ships and own stations in the sector first</t>
+
+      <!-- Section: Applies To (90130) -->
+      <t id="90130">Applies To</t>
+      <t id="90131">Repair</t>
+      <t id="90132">Ammo &amp; unit resupply</t>
+
+      <!-- Section: Cost Limits (90140) -->
+      <t id="90140">Cost Limits</t>
+      <t id="90141">Max repair cost, 0 = unlimited</t>
+      <t id="90142">Max resupply cost, 0 = unlimited</t>
+
+      <!-- Section: Debug (90900) -->
+      <t id="90900">Debug</t>
+      <t id="90910">Debug Level</t>
+      <t id="90911">None</t>
+      <t id="90912">Debug</t>
+      <t id="90913">Trace</t>
+    </page>
+  </add>
+</diff>

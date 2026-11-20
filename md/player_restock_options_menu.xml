@@ -1,0 +1,276 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mdscript name="Player_Restock_Options_Menu" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <cues>
+    <library name="Ensure_Config" purpose="include_actions">
+      <actions>
+        <set_value name="$prDefaults" exact="table[
+          $enabled          = true,
+          $scopeMode        = 'jumps',
+          $maxJumps         = 2,
+          $ownershipTier    = 'friend',
+          $applyToRepair    = true,
+          $applyToResupply  = true,
+          $preferAuxShip    = true,
+          $maxRepairCost    = 0,
+          $maxResupplyCost  = 0,
+          $debugLevel       = 'none',
+        ]" />
+        <do_if value="@player.entity.$PlayerRestockConfig == null">
+          <set_value name="player.entity.$PlayerRestockConfig" exact="$prDefaults" />
+        </do_if>
+        <do_else>
+          <!-- "?" and not "== null": a stored false or 0 compares equal to null -->
+          <do_for_each name="$prKey" in="$prDefaults">
+            <do_if value="not player.entity.$PlayerRestockConfig.{$prKey}?">
+              <set_value name="player.entity.$PlayerRestockConfig.{$prKey}" exact="$prDefaults.{$prKey}" />
+            </do_if>
+          </do_for_each>
+        </do_else>
+        <remove_value name="$prDefaults" />
+      </actions>
+    </library>
+
+    <cue name="Init" version="1">
+      <actions>
+        <include_actions ref="Ensure_Config" />
+      </actions>
+      <cues>
+
+        <cue name="On_Game_Loaded" instantiate="true" version="1">
+          <conditions>
+            <event_game_loaded />
+          </conditions>
+          <actions>
+            <include_actions ref="Ensure_Config" />
+          </actions>
+        </cue>
+
+        <cue name="Register_Menu" instantiate="true" version="1">
+          <conditions>
+            <event_cue_signalled cue="md.Simple_Menu_API.Reloaded" />
+          </conditions>
+          <actions>
+            <signal_cue_instantly cue="md.Simple_Menu_API.Register_Options_Menu"
+              param="table[
+                $id      = 'player_restock_options_menu',
+                $columns = 12,
+                $title   = {1972092435, 1},
+                $onOpen  = Options_Menu,
+              ]" />
+          </actions>
+        </cue>
+
+        <cue name="Options_Menu" instantiate="true" version="1">
+          <conditions>
+            <event_cue_signalled />
+          </conditions>
+          <actions>
+            <include_actions ref="Ensure_Config" />
+            <set_value name="$cfg" exact="player.entity.$PlayerRestockConfig" />
+
+            <!-- General -->
+            <run_actions ref="md.Options_Helper.Add_Title_Row">
+              <param name="title" value="{1972092435, 90100}" />
+            </run_actions>
+            <run_actions ref="md.Options_Helper.Add_Checkbox">
+              <param name="id" value="'enabled'" />
+              <param name="col" value="1" />
+              <param name="textColSpan" value="11" />
+              <param name="text" value="{1972092435, 90101}" />
+              <param name="data" value="$cfg" />
+              <param name="handle" value="Handle_Checkbox_Changed" />
+            </run_actions>
+
+            <!-- Search Scope -->
+            <include_actions ref="md.Options_Helper.Add_Empty_Row" />
+            <run_actions ref="md.Options_Helper.Add_Title_Row">
+              <param name="title" value="{1972092435, 90110}" />
+            </run_actions>
+            <set_value name="$scopeOptions" exact="[
+              table[$text = {1972092435, 90112}, $value = 'sector'],
+              table[$text = {1972092435, 90113}, $value = 'jumps'],
+              table[$text = {1972092435, 90114}, $value = 'galaxy']
+            ]" />
+            <set_value name="$scopeCurrentIndex" exact="['sector', 'jumps', 'galaxy'].indexof.{@$cfg.$scopeMode}" />
+            <do_if value="$scopeCurrentIndex == 0">
+              <set_value name="$scopeCurrentIndex" exact="2" />
+            </do_if>
+            <run_actions ref="md.Options_Helper.Add_Dropdown">
+              <param name="id" value="'scopeMode'" />
+              <param name="options" value="$scopeOptions" />
+              <param name="currentIndex" value="$scopeCurrentIndex" />
+              <param name="col" value="1" />
+              <param name="textColSpan" value="6" />
+              <param name="text" value="{1972092435, 90111}" />
+              <param name="dropdownColSpan" value="6" />
+              <param name="handle" value="Handle_Dropdown_Changed" />
+            </run_actions>
+            <remove_value name="$scopeOptions" />
+            <remove_value name="$scopeCurrentIndex" />
+            <run_actions ref="md.Options_Helper.Add_Slider">
+              <param name="id" value="'maxJumps'" />
+              <param name="min" value="1" />
+              <param name="max" value="8" />
+              <param name="step" value="1" />
+              <param name="text" value="{1972092435, 90115}" />
+              <param name="textColSpan" value="6" />
+              <param name="colSpan" value="6" />
+              <param name="data" value="$cfg" />
+              <param name="handle" value="Handle_Slider_Changed" />
+            </run_actions>
+
+            <!-- Station Preference -->
+            <include_actions ref="md.Options_Helper.Add_Empty_Row" />
+            <run_actions ref="md.Options_Helper.Add_Title_Row">
+              <param name="title" value="{1972092435, 90120}" />
+            </run_actions>
+            <set_value name="$tierOptions" exact="[
+              table[$text = {1972092435, 90122}, $value = 'own'],
+              table[$text = {1972092435, 90123}, $value = 'friend'],
+              table[$text = {1972092435, 90124}, $value = 'any']
+            ]" />
+            <set_value name="$tierCurrentIndex" exact="['own', 'friend', 'any'].indexof.{@$cfg.$ownershipTier}" />
+            <do_if value="$tierCurrentIndex == 0">
+              <set_value name="$tierCurrentIndex" exact="2" />
+            </do_if>
+            <run_actions ref="md.Options_Helper.Add_Dropdown">
+              <param name="id" value="'ownershipTier'" />
+              <param name="options" value="$tierOptions" />
+              <param name="currentIndex" value="$tierCurrentIndex" />
+              <param name="col" value="1" />
+              <param name="textColSpan" value="6" />
+              <param name="text" value="{1972092435, 90121}" />
+              <param name="dropdownColSpan" value="6" />
+              <param name="handle" value="Handle_Dropdown_Changed" />
+            </run_actions>
+            <remove_value name="$tierOptions" />
+            <remove_value name="$tierCurrentIndex" />
+            <run_actions ref="md.Options_Helper.Add_Checkbox">
+              <param name="id" value="'preferAuxShip'" />
+              <param name="col" value="1" />
+              <param name="textColSpan" value="11" />
+              <param name="text" value="{1972092435, 90125}" />
+              <param name="data" value="$cfg" />
+              <param name="handle" value="Handle_Checkbox_Changed" />
+            </run_actions>
+
+            <!-- Applies To -->
+            <include_actions ref="md.Options_Helper.Add_Empty_Row" />
+            <run_actions ref="md.Options_Helper.Add_Title_Row">
+              <param name="title" value="{1972092435, 90130}" />
+            </run_actions>
+            <run_actions ref="md.Options_Helper.Add_Checkbox">
+              <param name="id" value="'applyToRepair'" />
+              <param name="col" value="1" />
+              <param name="textColSpan" value="11" />
+              <param name="text" value="{1972092435, 90131}" />
+              <param name="data" value="$cfg" />
+              <param name="handle" value="Handle_Checkbox_Changed" />
+            </run_actions>
+            <run_actions ref="md.Options_Helper.Add_Checkbox">
+              <param name="id" value="'applyToResupply'" />
+              <param name="col" value="1" />
+              <param name="textColSpan" value="11" />
+              <param name="text" value="{1972092435, 90132}" />
+              <param name="data" value="$cfg" />
+              <param name="handle" value="Handle_Checkbox_Changed" />
+            </run_actions>
+
+            <!-- Cost Limits -->
+            <include_actions ref="md.Options_Helper.Add_Empty_Row" />
+            <run_actions ref="md.Options_Helper.Add_Title_Row">
+              <param name="title" value="{1972092435, 90140}" />
+            </run_actions>
+            <run_actions ref="md.Options_Helper.Add_Slider">
+              <param name="id" value="'maxRepairCost'" />
+              <param name="min" value="0" />
+              <param name="max" value="500000" />
+              <param name="step" value="5000" />
+              <param name="text" value="{1972092435, 90141}" />
+              <param name="textColSpan" value="6" />
+              <param name="colSpan" value="6" />
+              <param name="suffix" value="' Cr'" />
+              <param name="data" value="$cfg" />
+              <param name="handle" value="Handle_Slider_Changed" />
+            </run_actions>
+            <run_actions ref="md.Options_Helper.Add_Slider">
+              <param name="id" value="'maxResupplyCost'" />
+              <param name="min" value="0" />
+              <param name="max" value="500000" />
+              <param name="step" value="5000" />
+              <param name="text" value="{1972092435, 90142}" />
+              <param name="textColSpan" value="6" />
+              <param name="colSpan" value="6" />
+              <param name="suffix" value="' Cr'" />
+              <param name="data" value="$cfg" />
+              <param name="handle" value="Handle_Slider_Changed" />
+            </run_actions>
+
+            <!-- Debug -->
+            <include_actions ref="md.Options_Helper.Add_Empty_Row" />
+            <run_actions ref="md.Options_Helper.Add_Title_Row">
+              <param name="title" value="{1972092435, 90900}" />
+            </run_actions>
+            <set_value name="$debugLevelOptions" exact="[
+              table[$text = {1972092435, 90911}, $value = 'none'],
+              table[$text = {1972092435, 90912}, $value = 'debug'],
+              table[$text = {1972092435, 90913}, $value = 'trace']
+            ]" />
+            <set_value name="$debugLevelCurrentIndex" exact="['none', 'debug', 'trace'].indexof.{@$cfg.$debugLevel}" />
+            <do_if value="$debugLevelCurrentIndex == 0">
+              <set_value name="$debugLevelCurrentIndex" exact="1" />
+            </do_if>
+            <run_actions ref="md.Options_Helper.Add_Dropdown">
+              <param name="id" value="'debugLevel'" />
+              <param name="options" value="$debugLevelOptions" />
+              <param name="currentIndex" value="$debugLevelCurrentIndex" />
+              <param name="col" value="1" />
+              <param name="textColSpan" value="6" />
+              <param name="text" value="{1972092435, 90910}" />
+              <param name="dropdownColSpan" value="6" />
+              <param name="handle" value="Handle_Dropdown_Changed" />
+            </run_actions>
+            <remove_value name="$debugLevelOptions" />
+            <remove_value name="$debugLevelCurrentIndex" />
+
+            <remove_value name="$cfg" />
+          </actions>
+        </cue>
+
+        <cue name="Handle_Checkbox_Changed" instantiate="true" version="1">
+          <conditions>
+            <event_cue_signalled />
+          </conditions>
+          <actions>
+            <set_value name="$resultTable" exact="player.entity.$PlayerRestockConfig" />
+            <include_actions ref="md.Options_Helper.Process_Checkbox_Changed" />
+            <remove_value name="$resultTable" />
+          </actions>
+        </cue>
+
+        <cue name="Handle_Dropdown_Changed" instantiate="true" version="1">
+          <conditions>
+            <event_cue_signalled />
+          </conditions>
+          <actions>
+            <set_value name="$resultTable" exact="player.entity.$PlayerRestockConfig" />
+            <include_actions ref="md.Options_Helper.Process_Dropdown_Changed" />
+            <remove_value name="$resultTable" />
+          </actions>
+        </cue>
+
+        <cue name="Handle_Slider_Changed" instantiate="true" version="1">
+          <conditions>
+            <event_cue_signalled />
+          </conditions>
+          <actions>
+            <set_value name="$resultTable" exact="player.entity.$PlayerRestockConfig" />
+            <include_actions ref="md.Options_Helper.Process_Slider_Changed" />
+            <remove_value name="$resultTable" />
+          </actions>
+        </cue>
+
+      </cues>
+    </cue>
+  </cues>
+</mdscript>

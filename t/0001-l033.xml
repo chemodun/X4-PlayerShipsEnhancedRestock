@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- French -->
+<diff>
+  <add sel="/language">
+    <page id="1972092435" title="Player Ships Enhanced Restock" descr="" voice="no">
+      <t id="1">Réapprovisionnement amélioré des vaisseaux du joueur</t>
+
+      <!-- Section: General (90100) -->
+      <t id="90100">Général</t>
+      <t id="90101">Activer la recherche améliorée de réparation/ravitaillement</t>
+
+      <!-- Section: Search Scope (90110) -->
+      <t id="90110">Portée de la recherche</t>
+      <t id="90111">Rayon de recherche</t>
+      <t id="90112">Secteur uniquement</t>
+      <t id="90113">À quelques sauts</t>
+      <t id="90114">Toute la galaxie connue</t>
+      <t id="90115">Nombre max de sauts</t>
+
+      <!-- Section: Station Preference (90120) -->
+      <t id="90120">Préférence de stations</t>
+      <t id="90121">Propriétaire des stations</t>
+      <t id="90122">Vos propres stations uniquement</t>
+      <t id="90123">Vos stations + factions amicales</t>
+      <t id="90124">Toute faction non hostile</t>
+      <t id="90125">Essayer d'abord vos propres vaisseaux de ravitaillement et stations du secteur</t>
+
+      <!-- Section: Applies To (90130) -->
+      <t id="90130">S'applique à</t>
+      <t id="90131">Réparation</t>
+      <t id="90132">Ravitaillement en munitions &amp; appareils</t>
+
+      <!-- Section: Cost Limits (90140) -->
+      <t id="90140">Limites de coût</t>
+      <t id="90141">Coût de réparation max, 0 = illimité</t>
+      <t id="90142">Coût de ravitaillement max, 0 = illimité</t>
+
+      <!-- Section: Debug (90900) -->
+      <t id="90900">Débogage</t>
+      <t id="90910">Niveau de débogage</t>
+      <t id="90911">Aucun</t>
+      <t id="90912">Débogage</t>
+      <t id="90913">Trace</t>
+    </page>
+  </add>
+</diff>

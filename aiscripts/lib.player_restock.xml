@@ -1,0 +1,265 @@
+<?xml version="1.0" encoding="utf-8"?>
+<aiscript name="lib.player_restock" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="aiscripts.xsd" version="1">
+  <interrupts>
+    <library>
+      <!-- Runs once per round of the three-round station loop in ResupplyCheck. Variables live in the host script, hence the $pr prefix. -->
+      <actions name="PlayerRestockWiden">
+        <set_value name="$prCfg" exact="@player.entity.$PlayerRestockConfig"/>
+        <do_if value="this.isplayerowned and @$prCfg.$enabled and this.sector and not @$onlyuseresupplierships">
+          <set_value name="$prRound" exact="@$prRound + 1"/>
+          <set_value name="$prDebugChance" exact="if ['debug', 'trace'].indexof.{@$prCfg.$debugLevel} then 100 else 0"/>
+          <set_value name="$prTraceChance" exact="if @$prCfg.$debugLevel == 'trace' then 100 else 0"/>
+
+          <!-- With the preference on, vanilla candidates get rounds 1 and 2 alone; round 3 repeats the needs of round 2.
+               A resupplier off supply duty is no candidate: vanilla's filter drops it in every round. -->
+          <set_value name="$prVanilla" exact="0"/>
+          <do_if value="@$prCfg.$preferAuxShip and @$resupplystations_interrupt.count">
+            <do_for_each name="$prStation" in="$resupplystations_interrupt">
+              <do_if value="($prStation != this.assignedcontrolled) and not (($prStation != $param_station) and $prStation.isclass.ship and ($prStation.type == shiptype.resupplier) and (@$prStation.order.id != 'SupplyFleet'))">
+                <set_value name="$prVanilla" operation="add"/>
+              </do_if>
+            </do_for_each>
+            <remove_value name="$prStation"/>
+          </do_if>
+          <do_if value="(($repair and @$prCfg.$applyToRepair) or (($resupply_ammo or $resupply_units) and @$prCfg.$applyToResupply))
+            and (not $prVanilla or $prRound ge 3)">
+
+            <do_if value="not $prStations?">
+              <set_value name="$prShip" exact="this.assignedcontrolled"/>
+              <set_value name="$prBlacklistGroup" exact="if ($prShip.primarypurpose == purpose.fight) or ($prShip.primarypurpose == purpose.auxiliary) then blacklistgroup.military else blacklistgroup.civilian"/>
+
+              <set_value name="$prMaxJumps" exact="-1"/>
+              <do_if value="@$prCfg.$scopeMode == 'galaxy'">
+                <set_value name="$prSpace" exact="player.galaxy"/>
+              </do_if>
+              <do_elseif value="@$prCfg.$scopeMode == 'sector'">
+                <set_value name="$prSpace" exact="this.sector"/>
+              </do_elseif>
+              <do_else>
+                <set_value name="$prMaxJumps" exact="[(@$prCfg.$maxJumps)i, 1].max"/>
+                <!-- cluster range is only a prefilter, the exact jump count is checked per sector below -->
+                <find_cluster_in_range name="$prSpace" object="this.ship" maxdistance="$prMaxJumps" mindistance="0" multiple="true"/>
+              </do_else>
+
+              <set_value name="$prFound" exact="[]"/>
+              <find_station_by_true_owner name="$prFound" canequipclass="$prShip.class" canbuildclass="null" faction="this.owner" hascontrolentity="controlpost.shiptrader" space="$prSpace" multiple="true" append="true"/>
+              <do_if value="@$prCfg.$ownershipTier == 'friend'">
+                <find_station name="$prFound" canequipclass="$prShip.class" canbuildclass="$buildclass_interrupt" canbuildfor="this.owner" hascontrolentity="controlpost.shiptrader" space="$prSpace" knownto="faction.player" multiple="true" append="true">
+                  <match_relation_to object="$prShip" relation="friend" comparison="ge"/>
+                  <match_use_blacklist group="$prBlacklistGroup" type="blacklisttype.objectactivity" object="$prShip"/>
+                  <match_use_blacklist group="$prBlacklistGroup" type="blacklisttype.sectoractivity" object="$prShip"/>
+                  <match_use_blacklist group="$prBlacklistGroup" type="blacklisttype.sectortravel" object="$prShip"/>
+                </find_station>
+              </do_if>
+              <do_elseif value="@$prCfg.$ownershipTier == 'any'">
+                <find_station name="$prFound" canequipclass="$prShip.class" canbuildclass="$buildclass_interrupt" canbuildfor="this.owner" hascontrolentity="controlpost.shiptrader" space="$prSpace" knownto="faction.player" multiple="true" append="true">
+                  <match_relation_to object="$prShip" relation="enemy" comparison="not"/>
+                  <match_use_blacklist group="$prBlacklistGroup" type="blacklisttype.objectactivity" object="$prShip"/>
+                  <match_use_blacklist group="$prBlacklistGroup" type="blacklisttype.sectoractivity" object="$prShip"/>
+                  <match_use_blacklist group="$prBlacklistGroup" type="blacklisttype.sectortravel" object="$prShip"/>
+                </find_station>
+              </do_elseif>
+
+              <!-- one path query per sector, not per station: 1 = within reach, 2 = not -->
+              <set_value name="$prStations" exact="[]"/>
+              <set_value name="$prSectorState" exact="table[]"/>
+              <do_for_each name="$prStation" in="$prFound">
+                <set_value name="$prSector" exact="$prStation.sector"/>
+                <do_if value="not $prSectorState.{$prSector}?">
+                  <set_value name="$prJumps" exact="$prShip.gatedistance.{$prSector}.{$prBlacklistGroup}.{$prShip}"/>
+                  <set_value name="$prSectorState.{$prSector}" exact="if ($prJumps ge 0) and (($prMaxJumps lt 0) or ($prJumps le $prMaxJumps)) then 1 else 2"/>
+                </do_if>
+                <do_if value="($prSectorState.{$prSector} == 1) and not $prStations.indexof.{$prStation}">
+                  <append_to_list name="$prStations" exact="$prStation"/>
+                </do_if>
+              </do_for_each>
+              <debug_text text="'PlayerRestock: %s searched scope %s, tier %s, max jumps %s: found %s, within reach %s'.
+                [$prShip.debugname, @$prCfg.$scopeMode, @$prCfg.$ownershipTier, $prMaxJumps, $prFound.count, $prStations.count]" chance="$prTraceChance"/>
+
+              <remove_value name="$prStation"/>
+              <remove_value name="$prSector"/>
+              <remove_value name="$prJumps"/>
+              <remove_value name="$prSectorState"/>
+              <remove_value name="$prFound"/>
+              <remove_value name="$prSpace"/>
+              <remove_value name="$prMaxJumps"/>
+              <remove_value name="$prBlacklistGroup"/>
+              <remove_value name="$prShip"/>
+            </do_if>
+
+            <!-- stations the previous round filtered out come back, to be judged against the reduced needs -->
+            <do_if value="not $resupplystations_interrupt?">
+              <set_value name="$resupplystations_interrupt" exact="[]"/>
+            </do_if>
+            <!-- vanilla's filter cuts the shopping list at the first candidate that cannot build an ammo type:
+                 such stations are offered only when no station builds all of it -->
+            <set_value name="$prOffer" exact="$prStations"/>
+            <do_if value="$resupply_ammo and @$ammotable_interrupt.keys.count">
+              <set_value name="$prOffer" exact="[]"/>
+              <do_for_each name="$prStation" in="$prStations">
+                <do_if value="$prStation.canbuildequipment.{$ammotable_interrupt.keys.list}">
+                  <append_to_list name="$prOffer" exact="$prStation"/>
+                </do_if>
+              </do_for_each>
+              <do_if value="not $prOffer.count">
+                <set_value name="$prOffer" exact="$prStations"/>
+              </do_if>
+            </do_if>
+            <set_value name="$prAdded" exact="0"/>
+            <do_for_each name="$prStation" in="$prOffer">
+              <do_if value="not $resupplystations_interrupt.indexof.{$prStation}">
+                <append_to_list name="$resupplystations_interrupt" exact="$prStation"/>
+                <set_value name="$prAdded" operation="add"/>
+              </do_if>
+            </do_for_each>
+            <debug_text text="'PlayerRestock: %s round %s: offered %s of %s station(s), repair %s, ammo %s, units %s'.
+              [this.assignedcontrolled.debugname, $prRound, $prAdded, $prStations.count, $repair, $resupply_ammo, $resupply_units]" chance="$prTraceChance"/>
+            <remove_value name="$prOffer"/>
+            <remove_value name="$prStation"/>
+            <remove_value name="$prAdded"/>
+          </do_if>
+          <remove_value name="$prVanilla"/>
+        </do_if>
+        <remove_value name="$prCfg"/>
+      </actions>
+
+      <!-- Runs right before ResupplyCheck creates its orders, with the destination resolved. -->
+      <actions name="PlayerRestockPreOrder">
+        <do_if value="this.isplayerowned and $destination_station_interrupt? and @$prStations.indexof.{$destination_station_interrupt}">
+          <!-- an own station in this sector is a vanilla destination: the options do not apply to it -->
+          <do_if value="not ($destination_station_interrupt.isplayerowned and (@$destination_station_interrupt.sector == this.sector))">
+            <set_value name="$prCfg" exact="@player.entity.$PlayerRestockConfig"/>
+
+            <do_if value="$repair and not @$prCfg.$applyToRepair">
+              <set_value name="$repair" exact="false"/>
+            </do_if>
+            <do_if value="($resupply_ammo or $resupply_units) and not @$prCfg.$applyToResupply">
+              <set_value name="$resupply_ammo" exact="false"/>
+              <set_value name="$resupply_units" exact="false"/>
+            </do_if>
+
+            <!-- a foreign station is paid, vanilla charges nothing on this path: PlayerRestockPayRepair, PlayerRestockPrice -->
+            <do_if value="not $destination_station_interrupt.isplayerowned">
+              <do_if value="$repair">
+                <set_value name="$prCost" exact="this.assignedcontrolled.repairprice"/>
+                <do_if value="($prCost gt player.money) or (($prCfg.$maxRepairCost gt 0) and ($prCost gt ($prCfg.$maxRepairCost)Cr))">
+                  <debug_text text="'PlayerRestock: %s skips repair at %s: estimate %s Cr, limit %s Cr, wallet %s Cr'.
+                    [this.assignedcontrolled.debugname, $destination_station_interrupt.debugname, $prCost.formatted.default, $prCfg.$maxRepairCost, player.money.formatted.default]" chance="$prDebugChance"/>
+                  <set_value name="$repair" exact="false"/>
+                </do_if>
+              </do_if>
+              <do_if value="$resupply_ammo or $resupply_units">
+                <include_interrupt_actions ref="PlayerRestockResupplyCost"/>
+                <do_if value="($prCost gt player.money) or (($prCfg.$maxResupplyCost gt 0) and ($prCost gt ($prCfg.$maxResupplyCost)Cr))">
+                  <debug_text text="'PlayerRestock: %s skips resupply at %s: estimate %s Cr, limit %s Cr, wallet %s Cr'.
+                    [this.assignedcontrolled.debugname, $destination_station_interrupt.debugname, $prCost.formatted.default, $prCfg.$maxResupplyCost, player.money.formatted.default]" chance="$prDebugChance"/>
+                  <set_value name="$resupply_ammo" exact="false"/>
+                  <set_value name="$resupply_units" exact="false"/>
+                </do_if>
+              </do_if>
+              <remove_value name="$prCost"/>
+              <do_if value="$repair">
+                <set_value name="this.$prPayRepairAt" exact="$destination_station_interrupt"/>
+              </do_if>
+            </do_if>
+
+            <do_if value="$repair or $resupply_ammo or $resupply_units">
+              <debug_text text="'PlayerRestock: %s goes to %s in %s, repair %s, ammo %s, units %s'.
+                [this.assignedcontrolled.debugname, $destination_station_interrupt.debugname, @$destination_station_interrupt.sector.debugname, $repair, $resupply_ammo, $resupply_units]" chance="$prDebugChance"/>
+            </do_if>
+            <do_else>
+              <debug_text text="'PlayerRestock: %s has nothing left to do at %s, trip dropped'.
+                [this.assignedcontrolled.debugname, $destination_station_interrupt.debugname]" chance="$prDebugChance"/>
+              <remove_value name="$destination_station_interrupt"/>
+            </do_else>
+            <remove_value name="$prCfg"/>
+          </do_if>
+        </do_if>
+      </actions>
+
+      <!-- Sets $prCost. The tables hold target totals, only the part not yet on board is bought. -->
+      <actions name="PlayerRestockResupplyCost">
+        <set_value name="$prCost" exact="0Cr"/>
+        <do_if value="@$ammotable_interrupt.keys.count">
+          <do_for_each name="$prWare" valuename="$prAmount" in="$ammotable_interrupt">
+            <set_value name="$prMissing" exact="$prAmount - this.assignedcontrolled.ammostorage.{$prWare.objectmacro}.count"/>
+            <do_if value="($prMissing gt 0) and $destination_station_interrupt.canbuildequipment.{$prWare}">
+              <set_value name="$prCost" operation="add" exact="$destination_station_interrupt.buildprice.{$prWare} * $prMissing"/>
+            </do_if>
+          </do_for_each>
+        </do_if>
+        <do_if value="@$unittable_interrupt.keys.count">
+          <do_for_each name="$prWare" valuename="$prAmount" in="$unittable_interrupt">
+            <set_value name="$prMissing" exact="$prAmount - this.assignedcontrolled.units.{$prWare.objectmacro}.count"/>
+            <do_if value="($prMissing gt 0) and $destination_station_interrupt.canbuildequipment.{$prWare}">
+              <set_value name="$prCost" operation="add" exact="$destination_station_interrupt.buildprice.{$prWare} * $prMissing"/>
+            </do_if>
+          </do_for_each>
+        </do_if>
+        <remove_value name="$prWare"/>
+        <remove_value name="$prAmount"/>
+        <remove_value name="$prMissing"/>
+      </actions>
+
+      <!-- Runs right before the resupply build is added: vanilla prices it only for an NPC ship at a player station. -->
+      <actions name="PlayerRestockPrice">
+        <do_if value="this.isplayerowned and not $destination_station_interrupt.isplayerowned and @$prStations.indexof.{$destination_station_interrupt}">
+          <include_interrupt_actions ref="PlayerRestockResupplyCost"/>
+          <set_value name="$restockprice" exact="$prCost"/>
+          <do_if value="$prCost gt 0Cr">
+            <set_value name="this.$prPayResupplyAt" exact="$destination_station_interrupt"/>
+          </do_if>
+          <debug_text text="'PlayerRestock: %s resupply at %s priced at %s Cr'.
+            [this.assignedcontrolled.debugname, $destination_station_interrupt.debugname, $prCost.formatted.default]" chance="$prDebugChance"/>
+          <remove_value name="$prCost"/>
+        </do_if>
+      </actions>
+
+      <!-- Runs in order.repair at the repair label. Sets $prRepairRefused when the player cannot pay. -->
+      <actions name="PlayerRestockPayRepair">
+        <do_if value="@this.$prPayRepairAt == $destination">
+          <remove_value name="this.$prPayRepairAt"/>
+          <set_value name="$prCost" exact="this.ship.repairprice"/>
+          <do_if value="$prCost gt player.money">
+            <debug_text text="'PlayerRestock: %s cannot pay %s Cr for repair at %s, repair cancelled'.
+              [this.ship.debugname, $prCost.formatted.default, $destination.debugname]"
+              chance="if ['debug', 'trace'].indexof.{@player.entity.$PlayerRestockConfig.$debugLevel} then 100 else 0"/>
+            <write_to_logbook category="general" title="'%s (%s) - %s'.[this.ship.knownname, this.ship.idcode, {1041, 211}]"
+              text="{1001, 8012} + ': ' + {10002, 135} + '\n' + {1015, 28}" interaction="showonmap" object="this.ship"/>
+            <set_value name="$prRepairRefused"/>
+          </do_if>
+          <do_elseif value="$prCost gt 0Cr">
+            <transfer_money from="faction.player" to="$destination" amount="$prCost"/>
+            <write_to_logbook category="upkeep" title="{1016, 152}"
+              text="{1016, 98}.[this.ship.knownname, this.ship.idcode, $destination.knownname, $destination.idcode, $prCost.formatted.default]"
+              interaction="showonmap" object="this.ship" faction="$destination.owner" money="-$prCost"/>
+            <debug_text text="'PlayerRestock: %s paid %s Cr for repair at %s'.
+              [this.ship.debugname, $prCost.formatted.default, $destination.debugname]"
+              chance="if ['debug', 'trace'].indexof.{@player.entity.$PlayerRestockConfig.$debugLevel} then 100 else 0"/>
+          </do_elseif>
+          <remove_value name="$prCost"/>
+        </do_if>
+      </actions>
+
+      <!-- Runs in build.shiptrader when a ship modification build has finished: vanilla logs it only for an NPC ship at a player station. -->
+      <actions name="PlayerRestockResupplyPaid">
+        <do_if value="$playerownedobject and event.param3.isrestock and (event.param3.price gt 0Cr) and (@$object.pilot.$prPayResupplyAt == this.object)">
+          <remove_value name="$object.pilot.$prPayResupplyAt"/>
+          <write_to_logbook category="upkeep" title="{1016, 151}"
+            text="{1016, 97}.[$object.knownname, $object.idcode, this.object.knownname, this.object.idcode, event.param3.price.formatted.default]"
+            interaction="showonmap" object="$object" faction="this.object.owner" money="-event.param3.price"/>
+          <debug_text text="'PlayerRestock: %s paid %s Cr for resupply at %s'.
+            [$object.debugname, event.param3.price.formatted.default, this.object.debugname]"
+            chance="if ['debug', 'trace'].indexof.{@player.entity.$PlayerRestockConfig.$debugLevel} then 100 else 0"/>
+        </do_if>
+      </actions>
+
+      <actions name="PlayerRestockCleanup">
+        <remove_value name="$prStations"/>
+        <remove_value name="$prRound"/>
+        <remove_value name="$prDebugChance"/>
+        <remove_value name="$prTraceChance"/>
+      </actions>
+    </library>
+  </interrupts>
+</aiscript>

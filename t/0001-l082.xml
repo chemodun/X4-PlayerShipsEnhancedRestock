@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Korean -->
+<diff>
+  <add sel="/language">
+    <page id="1972092435" title="Player Ships Enhanced Restock" descr="" voice="no">
+      <t id="1">플레이어 함선 재보급 강화</t>
+
+      <!-- Section: General (90100) -->
+      <t id="90100">일반</t>
+      <t id="90101">향상된 수리/재보급 탐색 활성화</t>
+
+      <!-- Section: Search Scope (90110) -->
+      <t id="90110">탐색 범위</t>
+      <t id="90111">탐색 반경</t>
+      <t id="90112">현재 섹터만</t>
+      <t id="90113">인근 점프 범위</t>
+      <t id="90114">알려진 은하계 전체</t>
+      <t id="90115">최대 점프 수</t>
+
+      <!-- Section: Station Preference (90120) -->
+      <t id="90120">스테이션 선호</t>
+      <t id="90121">스테이션 소유권</t>
+      <t id="90122">자신의 스테이션만</t>
+      <t id="90123">자신 + 우호 세력</t>
+      <t id="90124">모든 비적대 세력</t>
+      <t id="90125">섹터 내 자신의 보급선과 자신의 스테이션을 먼저 시도</t>
+
+      <!-- Section: Applies To (90130) -->
+      <t id="90130">적용 대상</t>
+      <t id="90131">수리</t>
+      <t id="90132">탄약 &amp; 드론 재보급</t>
+
+      <!-- Section: Cost Limits (90140) -->
+      <t id="90140">비용 한도</t>
+      <t id="90141">최대 수리비, 0 = 무제한</t>
+      <t id="90142">최대 재보급 비용, 0 = 무제한</t>
+
+      <!-- Section: Debug (90900) -->
+      <t id="90900">디버그</t>
+      <t id="90910">디버그 수준</t>
+      <t id="90911">없음</t>
+      <t id="90912">디버그</t>
+      <t id="90913">추적</t>
+    </page>
+  </add>
+</diff>

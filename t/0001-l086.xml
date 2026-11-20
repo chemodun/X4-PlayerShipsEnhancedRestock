@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Chinese Simplified -->
+<diff>
+  <add sel="/language">
+    <page id="1972092435" title="Player Ships Enhanced Restock" descr="" voice="no">
+      <t id="1">玩家飞船补给增强</t>
+
+      <!-- Section: General (90100) -->
+      <t id="90100">常规</t>
+      <t id="90101">启用增强的修复/补给搜寻</t>
+
+      <!-- Section: Search Scope (90110) -->
+      <t id="90110">搜寻范围</t>
+      <t id="90111">搜寻半径</t>
+      <t id="90112">仅限当前星区</t>
+      <t id="90113">附近跳跃范围</t>
+      <t id="90114">整个已知宇宙</t>
+      <t id="90115">最大跳跃次数</t>
+
+      <!-- Section: Station Preference (90120) -->
+      <t id="90120">空间站偏好</t>
+      <t id="90121">空间站所有权</t>
+      <t id="90122">仅限自有空间站</t>
+      <t id="90123">自有 + 友善势力</t>
+      <t id="90124">所有非敌对势力</t>
+      <t id="90125">优先尝试本星区内的自有补给舰和自有空间站</t>
+
+      <!-- Section: Applies To (90130) -->
+      <t id="90130">适用于</t>
+      <t id="90131">修复</t>
+      <t id="90132">弹药 &amp; 单位补给</t>
+
+      <!-- Section: Cost Limits (90140) -->
+      <t id="90140">花费上限</t>
+      <t id="90141">最高修复花费，0 = 无限制</t>
+      <t id="90142">最高补给花费，0 = 无限制</t>
+
+      <!-- Section: Debug (90900) -->
+      <t id="90900">调试</t>
+      <t id="90910">调试级别</t>
+      <t id="90911">无</t>
+      <t id="90912">调试</t>
+      <t id="90913">跟踪</t>
+    </page>
+  </add>
+</diff>

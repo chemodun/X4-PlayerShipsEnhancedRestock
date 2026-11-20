@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<diff>
+  <add sel="/aiscript/interrupts/handler/actions//do_elseif[@value='event.param3.base and event.param3.isshipmodification']" pos="prepend">
+    <include_interrupt_actions ref="PlayerRestockResupplyPaid" />
+  </add>
+</diff>

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Polish -->
+<diff>
+  <add sel="/language">
+    <page id="1972092435" title="Player Ships Enhanced Restock" descr="" voice="no">
+      <t id="1">Rozszerzone uzupełnianie zapasów statków gracza</t>
+
+      <!-- Section: General (90100) -->
+      <t id="90100">Ogólne</t>
+      <t id="90101">Włącz rozszerzone wyszukiwanie naprawy i zaopatrzenia</t>
+
+      <!-- Section: Search Scope (90110) -->
+      <t id="90110">Zakres wyszukiwania</t>
+      <t id="90111">Promień wyszukiwania</t>
+      <t id="90112">Tylko sektor</t>
+      <t id="90113">W zasięgu kilku skoków</t>
+      <t id="90114">Cała znana galaktyka</t>
+      <t id="90115">Maks. liczba skoków</t>
+
+      <!-- Section: Station Preference (90120) -->
+      <t id="90120">Wybór stacji</t>
+      <t id="90121">Właściciel stacji</t>
+      <t id="90122">Tylko własne stacje</t>
+      <t id="90123">Własne + przyjazne frakcje</t>
+      <t id="90124">Wszystkie niewrogie</t>
+      <t id="90125">Najpierw próbuj własnych statków zaopatrzeniowych i własnych stacji w sektorze</t>
+
+      <!-- Section: Applies To (90130) -->
+      <t id="90130">Dotyczy</t>
+      <t id="90131">Naprawa</t>
+      <t id="90132">Zaopatrzenie w amunicję &amp; jednostki</t>
+
+      <!-- Section: Cost Limits (90140) -->
+      <t id="90140">Limity kosztów</t>
+      <t id="90141">Maks. koszt naprawy, 0 = bez limitu</t>
+      <t id="90142">Maks. koszt zaopatrzenia, 0 = bez limitu</t>
+
+      <!-- Section: Debug (90900) -->
+      <t id="90900">Debugowanie</t>
+      <t id="90910">Poziom debugowania</t>
+      <t id="90911">Brak</t>
+      <t id="90912">Debugowanie</t>
+      <t id="90913">Ślad</t>
+    </page>
+  </add>
+</diff>

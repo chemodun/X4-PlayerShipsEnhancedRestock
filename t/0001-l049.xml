@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- German -->
+<diff>
+  <add sel="/language">
+    <page id="1972092435" title="Player Ships Enhanced Restock" descr="" voice="no">
+      <t id="1">Erweitertes Aufstocken für Spielerschiffe</t>
+
+      <!-- Section: General (90100) -->
+      <t id="90100">Allgemein</t>
+      <t id="90101">Erweiterte Suche für Reparatur/Aufstocken aktivieren</t>
+
+      <!-- Section: Search Scope (90110) -->
+      <t id="90110">Suchbereich</t>
+      <t id="90111">Suchradius</t>
+      <t id="90112">Nur Sektor</t>
+      <t id="90113">Wenige Sprünge entfernt</t>
+      <t id="90114">Gesamte bekannte Galaxie</t>
+      <t id="90115">Max. Sprünge</t>
+
+      <!-- Section: Station Preference (90120) -->
+      <t id="90120">Stationsauswahl</t>
+      <t id="90121">Stationsbesitzer</t>
+      <t id="90122">Nur eigene Stationen</t>
+      <t id="90123">Eigene + freundliche Fraktionen</t>
+      <t id="90124">Alle nicht feindlichen</t>
+      <t id="90125">Zuerst eigene Nachschubschiffe und eigene Stationen im Sektor versuchen</t>
+
+      <!-- Section: Applies To (90130) -->
+      <t id="90130">Gilt für</t>
+      <t id="90131">Reparatur</t>
+      <t id="90132">Munition &amp; Einheiten aufstocken</t>
+
+      <!-- Section: Cost Limits (90140) -->
+      <t id="90140">Kostengrenzen</t>
+      <t id="90141">Max. Reparaturkosten, 0 = unbegrenzt</t>
+      <t id="90142">Max. Aufstockungskosten, 0 = unbegrenzt</t>
+
+      <!-- Section: Debug (90900) -->
+      <t id="90900">Debug</t>
+      <t id="90910">Debug-Stufe</t>
+      <t id="90911">Keine</t>
+      <t id="90912">Debug</t>
+      <t id="90913">Ablaufverfolgung</t>
+    </page>
+  </add>
+</diff>

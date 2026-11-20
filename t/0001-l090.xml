@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Turkish -->
+<diff>
+  <add sel="/language">
+    <page id="1972092435" title="Player Ships Enhanced Restock" descr="" voice="no">
+      <t id="1">Oyuncu Gemileri için Gelişmiş Stok Yenileme</t>
+
+      <!-- Section: General (90100) -->
+      <t id="90100">Genel</t>
+      <t id="90101">Gelişmiş onarım/ikmal aramasını etkinleştir</t>
+
+      <!-- Section: Search Scope (90110) -->
+      <t id="90110">Arama Kapsamı</t>
+      <t id="90111">Arama yarıçapı</t>
+      <t id="90112">Yalnızca sektör</t>
+      <t id="90113">Birkaç sıçrama içinde</t>
+      <t id="90114">Bilinen tüm galaksi</t>
+      <t id="90115">Maks sıçrama sayısı</t>
+
+      <!-- Section: Station Preference (90120) -->
+      <t id="90120">İstasyon Tercihi</t>
+      <t id="90121">İstasyon sahipliği</t>
+      <t id="90122">Yalnızca kendi istasyonlarınız</t>
+      <t id="90123">Kendi + dost fraksiyonlar</t>
+      <t id="90124">Düşman olmayan herhangi biri</t>
+      <t id="90125">Önce sektördeki kendi ikmal gemilerinizi ve kendi istasyonlarınızı dene</t>
+
+      <!-- Section: Applies To (90130) -->
+      <t id="90130">Geçerli Olduğu İşlemler</t>
+      <t id="90131">Onarım</t>
+      <t id="90132">Mühimmat &amp; birim ikmali</t>
+
+      <!-- Section: Cost Limits (90140) -->
+      <t id="90140">Maliyet Sınırları</t>
+      <t id="90141">Maks onarım maliyeti, 0 = sınırsız</t>
+      <t id="90142">Maks ikmal maliyeti, 0 = sınırsız</t>
+
+      <!-- Section: Debug (90900) -->
+      <t id="90900">Hata Ayıklama</t>
+      <t id="90910">Hata Ayıklama Seviyesi</t>
+      <t id="90911">Yok</t>
+      <t id="90912">Hata Ayıklama</t>
+      <t id="90913">İzleme</t>
+    </page>
+  </add>
+</diff>

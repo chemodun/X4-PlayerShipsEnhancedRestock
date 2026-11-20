@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<diff>
+  <add sel="/aiscript/interrupts/library/actions[@name='ResupplyCheck']/do_if[@value='not $cleanup_interrupt?']/do_if[@value='$repair or $resupply_ammo or $resupply_units or $restock_subordinates']/do_if[@value='not $cleanup_interrupt?']/do_all[@exact='3']/do_if[@value='@$pass_interrupt lt 3 and @$urgent']" pos="after">
+    <include_interrupt_actions ref="PlayerRestockWiden" />
+  </add>
+  <add sel="/aiscript/interrupts/library/actions[@name='ResupplyCheck']/do_if[@value='not $cleanup_interrupt?']/do_if[@value='$repair or $resupply_ammo or $resupply_units or $restock_subordinates']/do_if[@value='not $cleanup_interrupt?']/do_if[@value='not $cleanup_interrupt?']" pos="prepend">
+    <include_interrupt_actions ref="PlayerRestockPreOrder" />
+  </add>
+  <add sel="//add_build_to_modify_ship[@object='$destination_station_interrupt']" pos="before">
+    <include_interrupt_actions ref="PlayerRestockPrice" />
+  </add>
+  <add sel="/aiscript/interrupts/library/actions[@name='ResupplyCheck']">
+    <include_interrupt_actions ref="PlayerRestockCleanup" />
+  </add>
+</diff>

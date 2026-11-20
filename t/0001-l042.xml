@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Czech -->
+<diff>
+  <add sel="/language">
+    <page id="1972092435" title="Player Ships Enhanced Restock" descr="" voice="no">
+      <t id="1">Rozšířené doplňování zásob lodí hráče</t>
+
+      <!-- Section: General (90100) -->
+      <t id="90100">Všeobecné</t>
+      <t id="90101">Povolit rozšířené hledání oprav a doplnění zásob</t>
+
+      <!-- Section: Search Scope (90110) -->
+      <t id="90110">Rozsah hledání</t>
+      <t id="90111">Poloměr hledání</t>
+      <t id="90112">Pouze sektor</t>
+      <t id="90113">Několik skoků daleko</t>
+      <t id="90114">Celá známá galaxie</t>
+      <t id="90115">Max. počet skoků</t>
+
+      <!-- Section: Station Preference (90120) -->
+      <t id="90120">Volba stanic</t>
+      <t id="90121">Majitel stanic</t>
+      <t id="90122">Pouze vlastní stanice</t>
+      <t id="90123">Vlastní + přátelské frakce</t>
+      <t id="90124">Všechny kromě nepřátelských</t>
+      <t id="90125">Nejprve zkusit vlastní zásobovací lodě a vlastní stanice v sektoru</t>
+
+      <!-- Section: Applies To (90130) -->
+      <t id="90130">Platí pro</t>
+      <t id="90131">Oprava</t>
+      <t id="90132">Doplnění munice &amp; jednotek</t>
+
+      <!-- Section: Cost Limits (90140) -->
+      <t id="90140">Limity nákladů</t>
+      <t id="90141">Max. náklady na opravu, 0 = bez omezení</t>
+      <t id="90142">Max. náklady na doplnění zásob, 0 = bez omezení</t>
+
+      <!-- Section: Debug (90900) -->
+      <t id="90900">Ladění</t>
+      <t id="90910">Úroveň ladění</t>
+      <t id="90911">Žádná</t>
+      <t id="90912">Ladění</t>
+      <t id="90913">Trasování</t>
+    </page>
+  </add>
+</diff>

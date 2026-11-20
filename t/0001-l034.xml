@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Spanish -->
+<diff>
+  <add sel="/language">
+    <page id="1972092435" title="Player Ships Enhanced Restock" descr="" voice="no">
+      <t id="1">Reabastecimiento mejorado de naves del jugador</t>
+
+      <!-- Section: General (90100) -->
+      <t id="90100">General</t>
+      <t id="90101">Activar la búsqueda mejorada de reparación/reabastecimiento</t>
+
+      <!-- Section: Search Scope (90110) -->
+      <t id="90110">Alcance de la búsqueda</t>
+      <t id="90111">Radio de búsqueda</t>
+      <t id="90112">Solo el sector</t>
+      <t id="90113">A pocos saltos</t>
+      <t id="90114">Toda la galaxia conocida</t>
+      <t id="90115">Máximo de saltos</t>
+
+      <!-- Section: Station Preference (90120) -->
+      <t id="90120">Preferencia de estaciones</t>
+      <t id="90121">Propietario de las estaciones</t>
+      <t id="90122">Solo tus propias estaciones</t>
+      <t id="90123">Tus estaciones + facciones amistosas</t>
+      <t id="90124">Cualquier facción no hostil</t>
+      <t id="90125">Probar primero tus propias naves de reabastecimiento y estaciones del sector</t>
+
+      <!-- Section: Applies To (90130) -->
+      <t id="90130">Se aplica a</t>
+      <t id="90131">Reparación</t>
+      <t id="90132">Reabastecimiento de munición &amp; unidades</t>
+
+      <!-- Section: Cost Limits (90140) -->
+      <t id="90140">Límites de coste</t>
+      <t id="90141">Coste máximo de reparación, 0 = sin límite</t>
+      <t id="90142">Coste máximo de reabastecimiento, 0 = sin límite</t>
+
+      <!-- Section: Debug (90900) -->
+      <t id="90900">Depuración</t>
+      <t id="90910">Nivel de depuración</t>
+      <t id="90911">Ninguno</t>
+      <t id="90912">Depuración</t>
+      <t id="90913">Rastreo</t>
+    </page>
+  </add>
+</diff>
