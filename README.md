@@ -25,10 +25,6 @@ Lets player-owned ships repair and resupply beyond their own sector and beyond p
 - The price is settled on arrival, so it can differ from the estimate. If the money is no longer there, the repair or the resupply is cancelled with a logbook entry.
 - With the whole galaxy as scope, the nearest suitable station can still be a long trip away.
 
-## Compatibility
-
-- Works alongside `Protect Sector`, which has its own narrower search for ships on that order; the two do not interfere. A trip to a station found by `Protect Sector`'s own search is its business: this mod does not charge for it and applies none of its switches or limits to it.
-
 ## Requirements
 
 - `X4: Foundations` 8.00 or newer.
